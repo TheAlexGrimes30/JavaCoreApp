@@ -26,6 +26,9 @@ public class ProductManager implements IGood<Product> {
     // Команда пользователя для выполнения операции
     String command;
 
+    // Конструктор по умолчанию
+    public ProductManager(){}
+
     /*
      * Метод getProductCommand предоставляет пользователю список команд для работы с продуктами.
      * В зависимости от выбранной команды выполняется соответствующий метод.

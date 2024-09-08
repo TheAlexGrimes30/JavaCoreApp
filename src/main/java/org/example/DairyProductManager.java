@@ -25,6 +25,9 @@ public class DairyProductManager implements IGood<DairyProduct> {
     // Команда пользователя для выполнения операции
     String command;
 
+    //Конструктор по умолчанию
+    public DairyProductManager(){}
+
     /*
      * Метод getDairyProductCommand предоставляет пользователю список команд для работы с молочными продуктами.
      * В зависимости от выбранной команды выполняется соответствующий метод.
