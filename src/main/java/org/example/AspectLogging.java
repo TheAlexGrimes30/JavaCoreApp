@@ -3,6 +3,8 @@ package org.example;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -17,6 +19,7 @@ import java.util.Arrays;
 @Component
 public class AspectLogging {
 
+    private static final Logger logger = LoggerFactory.getLogger(AspectLogging.class);
 
     @Around("execution(* org.example.ProgramManager.getGoods(..))")
     public Object logAroundGetGoods(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -33,6 +36,9 @@ public class AspectLogging {
         System.out.println("Method started: " + methodName);
         System.out.println("Arguments: " + Arrays.toString(methodArgs));
 
+        logger.info("Method started: {}", methodName);
+        logger.info("Arguments: {}", Arrays.toString(methodArgs));
+
         Object result = null;
         try {
 
@@ -40,9 +46,14 @@ public class AspectLogging {
             // Логируем возвращаемое значение после успешного выполнения метода
             System.out.println("Method successfully completed: " + methodName);
             System.out.println("Returned: " + result);
+
+            logger.info("Method successfully completed: {}", methodName);
+            logger.info("Returned: {}", result);
+
         } catch (Throwable throwable) {
             // Логируем исключение
             System.out.println("Exception in method: " + methodName);
+            logger.error("Exception in method: {}", methodName, throwable);
             throw throwable;
         }
         return result;
@@ -57,5 +68,8 @@ public class AspectLogging {
     public void logExceptionInGetGoods(JoinPoint joinPoint, Throwable ex) {
         System.out.println("Exception thrown in method: " + joinPoint.getSignature().getName());
         System.out.println("Exception: " + ex.getMessage());
+
+        logger.error("Exception thrown in method: {}", joinPoint.getSignature().getName());
+        logger.error("Exception: {}", ex.getMessage(), ex);
     }
 }

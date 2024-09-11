@@ -1,0 +1,6 @@
+2024-09-11 08:56:00 INFO  org.example.AspectLogging - Method started: getGoods
+2024-09-11 08:56:00 INFO  org.example.AspectLogging - Arguments: []
+2024-09-11 08:56:18 INFO  org.example.AspectLogging - Method successfully completed: getGoods
+2024-09-11 08:56:18 INFO  org.example.AspectLogging - Returned: null
+2024-09-11 08:56:18 INFO  org.example.AspectLogging - Method started: getGoods
+2024-09-11 08:56:18 INFO  org.example.AspectLogging - Arguments: []
