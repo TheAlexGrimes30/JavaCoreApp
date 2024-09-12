@@ -1,9 +1,7 @@
 package org.example;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,13 +10,10 @@ import java.util.Scanner;
  * Он предоставляет методы для добавления, удаления, вывода данных и сравнения продуктов.
  */
 @Component
-public class ProductManager implements IGood<Product> {
+public class ProductManager implements IGood {
 
     // Объект для получения индексов
     GetIndex getIndexObj = new GetIndex();
-
-    // Коллекция для хранения продуктов
-    List<Product> ProductData = new ArrayList<>();
 
     // Объект для чтения пользовательского ввода
     Scanner scanner = new Scanner(System.in);
@@ -33,7 +28,7 @@ public class ProductManager implements IGood<Product> {
      * Метод getProductCommand предоставляет пользователю список команд для работы с продуктами.
      * В зависимости от выбранной команды выполняется соответствующий метод.
      */
-    public void getProductCommand() {
+    public void getProductCommand(List<Object> GoodData) {
         System.out.println(
                 """
                 Введите команду для работы с классом продукта:
@@ -46,10 +41,10 @@ public class ProductManager implements IGood<Product> {
 
         command = scanner.nextLine();
         switch (command) {
-            case "1" -> addGood(); // Добавление продукта
-            case "2" -> deleteGood(getIndexObj, ProductData); // Удаление продукта
-            case "3" -> GoodsList(ProductData); // Вывод данных продуктов
-            case "4" -> equal(); // Сравнение двух продуктов
+            case "1" -> addGood(GoodData); // Добавление продукта
+            case "2" -> DeleteGood(getIndexObj, GoodData); // Удаление продукта
+            case "3" -> GoodList(GoodData); // Вывод данных продуктов
+            case "4" -> equal(GoodData); // Сравнение двух продуктов
             default -> System.out.println("Вы ввели неверную команду!"); // Обработка неверной команды
         }
     }
@@ -60,7 +55,7 @@ public class ProductManager implements IGood<Product> {
      * Обрабатывает ошибки ввода и проверки диапазона значений.
      */
     @Override
-    public void addGood() {
+    public void addGood(List<Object> GoodData) {
         // Обработка ошибок неверного типа данных
         try {
             System.out.println("Введите название продукта: ");
@@ -70,7 +65,7 @@ public class ProductManager implements IGood<Product> {
 
             // Проверка переменной на диапазон
             if (Limits.checkLimited(1, 1000000, price)) {
-                this.addGood();
+                this.addGood(GoodData);
                 return;
             }
             System.out.println("Введите описание продукта");
@@ -79,15 +74,15 @@ public class ProductManager implements IGood<Product> {
             // Проверка переменной на диапазон
             int calories = Integer.parseInt(scanner.nextLine());
             if (Limits.checkLimited(1, 5000, calories)) {
-                this.addGood();
+                this.addGood(GoodData);
                 return;
             }
             Product product = new Product(name, price, description, calories);
-            ProductData.add(product);
+            GoodData.add(product);
         } catch (Exception e) {
             // Обработка исключений при неверном вводе данных
             System.out.println("Неверный тип данных\n" + e.getMessage());
-            this.addGood();
+            this.addGood(GoodData);
             return;
         }
         System.out.println("Продукт успешно добавлен");
@@ -99,7 +94,7 @@ public class ProductManager implements IGood<Product> {
      * Обрабатывает ошибки ввода и выводит результаты сравнения.
      */
     @Override
-    public void equal() {
+    public void equal(List<Object> GoodData) {
         int index1 = getIndexObj.getIndex();
         int index2 = getIndexObj.getIndex();
         if (index1 == index2) {
@@ -109,10 +104,10 @@ public class ProductManager implements IGood<Product> {
 
         // Обработка ошибок при введении индекса
         try {
-            Product product1 = ProductData.get(index1 - 1);
-            Product product2 = ProductData.get(index2 - 1);
-            if (product1.hashCode() == product2.hashCode()) {
-                if (product1.equals(product2)) {
+            Good good1 = (Good) GoodData.get(index1 - 1);
+            Good good2 = (Good) GoodData.get(index2 - 1);
+            if (good1.hashCode() == good2.hashCode()) {
+                if (good1.equals(good2)) {
                     System.out.println("Данные продуктов одинаковые");
                 } else {
                     System.out.println("Данные продуктов не одинаковые");
@@ -125,4 +120,5 @@ public class ProductManager implements IGood<Product> {
             System.out.println("Вы ввели неверные индексы\n");
         }
     }
+
 }

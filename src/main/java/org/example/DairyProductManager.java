@@ -2,7 +2,6 @@ package org.example;
 
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,13 +10,10 @@ import java.util.Scanner;
  * Он предоставляет методы для добавления, удаления, вывода данных и сравнения молочных продуктов.
  */
 @Component
-public class DairyProductManager implements IGood<DairyProduct> {
+public class DairyProductManager implements IGood {
 
     // Объект для получения индексов
     GetIndex getIndexObj = new GetIndex();
-
-    // Коллекция для хранения молочных продуктов
-    List<DairyProduct> DairyProductData = new ArrayList<>();
 
     // Объект для чтения пользовательского ввода
     Scanner scanner = new Scanner(System.in);
@@ -32,7 +28,7 @@ public class DairyProductManager implements IGood<DairyProduct> {
      * Метод getDairyProductCommand предоставляет пользователю список команд для работы с молочными продуктами.
      * В зависимости от выбранной команды выполняется соответствующий метод.
      */
-    public void getDairyProductCommand() {
+    public void getDairyProductCommand(List<Object> GoodData) {
         System.out.println(
                 """
                 Введите команду для работы с классом молочного продукта:
@@ -45,10 +41,10 @@ public class DairyProductManager implements IGood<DairyProduct> {
 
         command = scanner.nextLine();
         switch (command) {
-            case "1" -> addGood(); // Добавление молочного продукта
-            case "2" -> deleteGood(getIndexObj, DairyProductData); // Удаление молочного продукта
-            case "3" -> GoodsList(DairyProductData); // Вывод данных молочных продуктов
-            case "4" -> equal(); // Сравнение двух молочных продуктов
+            case "1" -> addGood(GoodData); // Добавление молочного продукта
+            case "2" -> DeleteGood(getIndexObj, GoodData); // Удаление молочного продукта
+            case "3" -> GoodList(GoodData); // Вывод данных молочных продуктов
+            case "4" -> equal(GoodData); // Сравнение двух молочных продуктов
             default -> System.out.println("Вы ввели неверную команду!"); // Обработка неверной команды
         }
     }
@@ -57,9 +53,10 @@ public class DairyProductManager implements IGood<DairyProduct> {
      * Метод addGood добавляет новый молочный продукт в коллекцию DairyProductData.
      * Запрашивает у пользователя информацию о продукте и создает новый объект DairyProduct.
      * Обрабатывает ошибки ввода и проверки диапазона значений.
+     * Параметр List<Object> GoodData
      */
     @Override
-    public void addGood() {
+    public void addGood(List<Object> GoodData) {
         // Обработка ошибок неверного типа данных
         try {
             System.out.println("Введите название продукта: ");
@@ -69,7 +66,7 @@ public class DairyProductManager implements IGood<DairyProduct> {
 
             // Проверка переменной на диапазон
             if (Limits.checkLimited(1, 1000000, price)) {
-                this.addGood();
+                this.addGood(GoodData);
                 return;
             }
             System.out.println("Введите описание продукта");
@@ -78,7 +75,7 @@ public class DairyProductManager implements IGood<DairyProduct> {
             // Проверка переменной на диапазон
             int calories = Integer.parseInt(scanner.nextLine());
             if (Limits.checkLimited(1, 5000, calories)) {
-                this.addGood();
+                this.addGood(GoodData);
                 return;
             }
             System.out.println("Введите тип молочного продукта");
@@ -86,15 +83,15 @@ public class DairyProductManager implements IGood<DairyProduct> {
             System.out.println("Введите вес молочного продукта в граммах");
             int weight = Integer.parseInt(scanner.nextLine());
             if (Limits.checkLimited(1, 30000, weight)) {
-                this.addGood();
+                this.addGood(GoodData);
                 return;
             }
             DairyProduct product = new DairyProduct(name, price, description, calories, type, weight);
-            DairyProductData.add(product);
+            GoodData.add(product);
         } catch (Exception e) {
             // Обработка исключений при неверном вводе данных
             System.out.println("Неверный тип данных\n" + e.getMessage());
-            this.addGood();
+            this.addGood(GoodData);
             return;
         }
         System.out.println("Молочный продукт успешно добавлен");
@@ -104,9 +101,10 @@ public class DairyProductManager implements IGood<DairyProduct> {
      * Метод equal сравнивает два молочных продукта по индексам, введенным пользователем.
      * Проверяет, равны ли объекты по значению их полей, используя методы hashCode и equals.
      * Обрабатывает ошибки ввода индексов и выводит результат сравнения.
+     * Параметр List<Object> GoodData
      */
     @Override
-    public void equal() {
+    public void equal(List<Object> GoodData) {
         int index1 = getIndexObj.getIndex();
         int index2 = getIndexObj.getIndex();
         if (index1 == index2) {
@@ -116,10 +114,10 @@ public class DairyProductManager implements IGood<DairyProduct> {
 
         // Обработка ошибок при введении индекса
         try {
-            DairyProduct dairyProduct1 = DairyProductData.get(index1 - 1);
-            DairyProduct dairyProduct2 = DairyProductData.get(index2 - 1);
-            if (dairyProduct1.hashCode() == dairyProduct2.hashCode()) {
-                if (dairyProduct1.equals(dairyProduct2)) {
+            Good good1 = (Good) GoodData.get(index1 - 1);
+            Good good2 = (Good) GoodData.get(index2 - 1);
+            if (good1.hashCode() == good2.hashCode()) {
+                if (good1.equals(good2)) {
                     System.out.println("Данные продуктов одинаковые");
                 } else {
                     System.out.println("Данные продуктов не одинаковые");

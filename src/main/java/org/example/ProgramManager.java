@@ -3,6 +3,8 @@ package org.example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /*
@@ -16,7 +18,8 @@ public class ProgramManager {
     private final ProductManager productManager;
     private final DairyProductManager dairyProductManager;
     private final ToyManager toyManager;
-
+    List<Object> GoodData = new ArrayList<>();
+    GetIndex getIndexObj = new GetIndex();
     /*
      * Конструктор класса ProgramManager инициализирует менеджеры продуктов.
      * Аннотация @Autowired позволяет Spring автоматически внедрять зависимости.
@@ -54,19 +57,27 @@ public class ProgramManager {
                 1) Продукт
                 2) Молочный продукт
                 3) Игрушка
-                4) Завершение работы программы
+                4) Сравнить индексы элементов списка
+                5) Удалить элемент из списка по индексу
+                6) Вывести данные списка
+                7) Завершение работы программы
                 """
         );
         String command = scanner.nextLine();
         switch (command) {
-            case "1" -> productManager.getProductCommand(); // Управление продуктами
-            case "2" -> dairyProductManager.getDairyProductCommand(); // Управление молочными продуктами
-            case "3" -> toyManager.getToyCommand(); // Управление игрушками
-            case "4" -> {
+            case "1" -> productManager.getProductCommand(GoodData); // Управление продуктами
+            case "2" -> dairyProductManager.getDairyProductCommand(GoodData); // Управление молочными продуктами
+            case "3" -> toyManager.getToyCommand(GoodData); // Управление игрушками
+            case "4" -> productManager.equal(GoodData);
+            case "5" -> productManager.DeleteGood(getIndexObj, GoodData);
+            case "6" -> productManager.GoodList(GoodData);
+            case "7" -> {
                 System.out.println("Работа программы завершена"); // Завершение работы программы
                 programIsActive = false; // Установка флага активности в false
             }
             default -> System.out.println("Вы ввели неверную команду!"); // Обработка неверной команды
         }
     }
+
+
 }
